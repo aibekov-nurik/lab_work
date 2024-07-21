@@ -8,4 +8,6 @@
 <p>{{ product.description }}</p>
 <p>Price: ${{ product.price }}</p>
 <p>Category: {{ product.category.name }}</p>
+<a href="{% url 'product_edit_view' product.id %}">Edit</a>
+<a href="{% url 'product_delete_view' product.id %}">Delete</a>
 {% endblock %}

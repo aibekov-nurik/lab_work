@@ -1,57 +1,45 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Product, Category
-from .forms import CategoryForm, ProductForm, ProductSearchForm
+from .forms import ProductForm, CategoryForm
 
+class ProductListView(ListView):
+    model = Product
+    template_name = 'products.html'
+    context_object_name = 'products'
+    paginate_by = 5
 
-def products_view(request):
-    form = ProductSearchForm(request.GET)
-    products = Product.objects.filter(stock__gt=0).order_by('category', 'name')
-    if form.is_valid() and form.cleaned_data['query']:
-        products = products.filter(name__icontains=form.cleaned_data['query'])
-    return render(request, 'products.html', {'products': products, 'form': form})
+    def get_queryset(self):
+        queryset = Product.objects.filter(stock__gt=0).order_by('category__name', 'name')
+        query = self.request.GET.get('q')
+        if query:
+            queryset = queryset.filter(name__icontains=query)
+        return queryset
 
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'product.html'
+    context_object_name = 'product'
 
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'product_form.html'
+    success_url = reverse_lazy('products_view')
 
-def product_view(request, id):
-    product = get_object_or_404(Product, pk=id)
-    return render(request, 'product.html', {'product': product})
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'product_form.html'
+    success_url = reverse_lazy('products_view')
 
-def category_add_view(request):
-    if request.method == 'POST':
-        form = CategoryForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('categories_view')
-    else:
-        form = CategoryForm()
-    return render(request, 'category_add.html', {'form': form})
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = 'product_confirm_delete.html'
+    success_url = reverse_lazy('products_view')
 
-def product_add_view(request):
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            product = form.save()
-            return redirect('product_view', id=product.id)
-    else:
-        form = ProductForm()
-    return render(request, 'product_add.html', {'form': form})
-
-def product_edit_view(request, id):
-    product = get_object_or_404(Product, pk=id)
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, instance=product)
-        if form.is_valid():
-            form.save()
-            return redirect('product_view', id=product.id)
-    else:
-        form = ProductForm(instance=product)
-    return render(request, 'product_edit.html', {'form': form, 'product': product})
-
-def product_delete_view(request, id):
-    product = get_object_or_404(Product, pk=id)
-    if request.method == 'POST':
-        product.delete()
-        return redirect('products_view')
-    return render(request, 'product_confirm_delete.html', {'product': product})
-
-
+class CategoryCreateView(CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'category_add.html'
+    success_url = reverse_lazy('products_view')

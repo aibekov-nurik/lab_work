@@ -3,10 +3,10 @@
 {% block title %}Delete Product{% endblock %}
 
 {% block content %}
-<h1>Are you sure you want to delete {{ product.name }}?</h1>
+<h1>Are you sure you want to delete {{ object.name }}?</h1>
 <form method="post">
     {% csrf_token %}
     <button type="submit">Delete</button>
-    <a href="{% url 'product_view' product.id %}">Cancel</a>
+    <a href="{% url 'product_view' object.pk %}">Cancel</a>
 </form>
 {% endblock %}

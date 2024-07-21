@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object.pk %}Edit Product{% else %}Add Product{% endif %}{% endblock %}
+
+{% block content %}
+<h1>{% if object.pk %}Edit{% else %}Add{% endif %} Product</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

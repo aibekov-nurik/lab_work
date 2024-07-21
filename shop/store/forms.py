@@ -9,7 +9,16 @@ class CategoryForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'category', 'price', 'image']
+        fields = ['name', 'description', 'category', 'price', 'stock', 'image']
 
-class ProductSearchForm(forms.Form):
-    query = forms.CharField(label='Поиск', max_length=255, required=False)
+    def clean_stock(self):
+        stock = self.cleaned_data.get('stock')
+        if stock < 0:
+            raise forms.ValidationError('Остаток не может быть меньше 0')
+        return stock
+
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if price < 0:
+            raise forms.ValidationError('Цена не может быть отрицательной')
+        return price

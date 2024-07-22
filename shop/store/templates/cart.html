@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+<h1>Cart</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart_items %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>${{ item.product.price|floatformat:2 }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.total_price|floatformat:2 }}</td>
+            <td>
+                <form method="POST" action="{% url 'decrease_quantity_in_cart' item.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">-</button>
+                </form>
+                <form method="POST" action="{% url 'remove_from_cart' item.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Remove</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p>Total: ${{ total|floatformat:2 }}</p>
+{% endblock %}

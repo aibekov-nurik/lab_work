@@ -36,4 +36,10 @@
     </tbody>
 </table>
 <p>Total: ${{ total|floatformat:2 }}</p>
+<h2>Checkout</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Place Order</button>
+</form>
 {% endblock %}

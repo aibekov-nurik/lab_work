@@ -1,0 +1,62 @@
+[
+    {
+        "model": "store.category",
+        "pk": 1,
+        "fields": {
+            "name": "Машина",
+            "description": ""
+        }
+    },
+    {
+        "model": "store.product",
+        "pk": 1,
+        "fields": {
+            "name": "Mersedec-Benz CLS AMG 63",
+            "description": "Mersedec-Benz CLS AMG 63",
+            "category": 1,
+            "price": "30000.00",
+            "stock": 5,
+            "image": ""
+        }
+    },
+    {
+        "model": "store.category",
+        "pk": 2,
+        "fields": {
+            "name": "Ноутбук",
+            "description": ""
+        }
+    },
+    {
+        "model": "store.product",
+        "pk": 2,
+        "fields": {
+            "name": "Lenovo Legion",
+            "description": "Lenovo Legion",
+            "category": 2,
+            "price": "250.00",
+            "stock": 7,
+            "image": ""
+        }
+    },
+    {
+        "model": "store.category",
+        "pk": 3,
+        "fields": {
+            "name": "Телефон",
+            "description": ""
+        }
+    },
+    {
+        "model": "store.product",
+        "pk": 3,
+        "fields": {
+            "name": "Iphone 14 Pro",
+            "description": "Iphone 14 Pro",
+            "category": 3,
+            "price": "150.00",
+            "stock": 5,
+            "image": ""
+        }
+    }
+]

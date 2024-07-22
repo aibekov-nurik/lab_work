@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Product, Category
-from .forms import ProductForm, CategoryForm
+from .models import Product, Category, OrderItem
+from .forms import ProductForm, CategoryForm, OrderForm
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product, CartItem
 class ProductListView(ListView):
@@ -84,6 +84,23 @@ def cart_view(request):
     for item in cart_items:
         item.total_price = item.product.price * item.quantity
 
-    return render(request, 'cart.html', {'cart_items': cart_items, 'total': total})
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save()
+            for cart_item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=cart_item.product,
+                    quantity=cart_item.quantity
+                )
+            CartItem.objects.all().delete()
+            return redirect('order_success_view')
+    else:
+        form = OrderForm()
 
+    return render(request, 'cart.html', {'cart_items': cart_items, 'total': total, 'form': form})
+
+def order_success_view(request):
+    return render(request, 'order_success.html')
 

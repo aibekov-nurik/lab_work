@@ -1,5 +1,6 @@
 from django import forms
-from .models import Category, Product
+from .models import Category, Product, Order
+
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -19,6 +20,11 @@ class ProductForm(forms.ModelForm):
 
     def clean_price(self):
         price = self.cleaned_data.get('price')
-        if price < 0:
-            raise forms.ValidationError('Цена не может быть отрицательной')
+        if price is not None:
+            if price < 0:
+                raise forms.ValidationError('Цена не может быть отрицательной')
         return price
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['username', 'phone', 'address']
